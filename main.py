@@ -33,7 +33,11 @@ def split_audio_at_timestamp(start_in_sec, end_in_sec, audio_file, output_file):
         outfile.writeframes(data)
 
 def diarise(filepath):
-  pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization")
+  api_token = os.getenv('API_TOKEN')
+  if api_token is None:
+    raise ValueError('missing API_TOKEN env var')
+  print(f'Using token {api_token}')
+  pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization", use_auth_token = api_token)
   diarization = pipeline(filepath)
   return diarization
 
